@@ -39,6 +39,13 @@ async fn subscribe(
         }
     })
 }
+#[rocket::get("/health-check")]
+async fn health_check(
+    
+) -> Status {
+    println!("I am alive");
+    Status::Ok
+}
 
 #[rocket::post("/rooms/<room_id>/issue_unique_idx")]
 async fn issue_idx(db: &State<Db>, room_id: &str) -> Json<IssuedUniqueIdx> {
@@ -191,7 +198,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     ));
     println!("Hello: starting the server"); 
     rocket::custom(figment)
-        .mount("/", rocket::routes![subscribe, issue_idx, broadcast])
+        .mount("/", rocket::routes![subscribe, issue_idx, broadcast, health_check])
         .manage(Db::empty())
         .launch()
         .await?;

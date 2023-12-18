@@ -19,6 +19,8 @@ where
     M: Serialize + DeserializeOwned,
 {
     let client = SmClient::new(address, room_id).context("construct SmClient")?;
+    println!("SM client called");
+    println!("Sm client: {:?}", client);
 
     // Construct channel of incoming messages
     let incoming = client
@@ -52,6 +54,7 @@ where
     Ok((index, incoming, outgoing))
 }
 
+#[derive(Debug)]
 pub struct SmClient {
     http_client: surf::Client,
 }
