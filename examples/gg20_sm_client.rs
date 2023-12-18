@@ -20,7 +20,7 @@ where
 {
     let client = SmClient::new(address, room_id).context("construct SmClient")?;
     println!("SM client called");
-    println!("Sm client: {:?}", client);
+    println!("Sm client: {:?}", client.http_client);
 
     // Construct channel of incoming messages
     let incoming = client
