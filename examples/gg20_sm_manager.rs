@@ -23,12 +23,16 @@ async fn subscribe(
 ) -> EventStream<impl Stream<Item = Event>> {
     let room = db.get_room_or_create_empty(room_id).await;
     let mut subscription = room.subscribe(last_seen_msg.0);
+    println!("SM manager called");
+    println!("room {}", room_id);
     EventStream::from(stream! {
         loop {
             let (id, msg) = tokio::select! {
                 message = subscription.next() => message,
                 _ = &mut shutdown => return,
             };
+            // println!("new message: {:?} ", msg);
+            // println!("new id: {:?} ", id.to_string());
             yield Event::data(msg)
                 .event("new-message")
                 .id(id.to_string())
@@ -180,10 +184,12 @@ struct IssuedUniqueIdx {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    println!("hello moto");
     let figment = rocket::Config::figment().merge((
         "limits",
         rocket::data::Limits::new().limit("string", 100.megabytes()),
     ));
+    println!("Hello: starting the server"); 
     rocket::custom(figment)
         .mount("/", rocket::routes![subscribe, issue_idx, broadcast])
         .manage(Db::empty())
