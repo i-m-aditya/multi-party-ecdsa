@@ -40,9 +40,7 @@ async fn subscribe(
     })
 }
 #[rocket::get("/health-check")]
-async fn health_check(
-    
-) -> Status {
+async fn health_check() -> Status {
     println!("I am alive");
     Status::Ok
 }

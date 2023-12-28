@@ -28,10 +28,12 @@ where
     let incoming = client
         .subscribe()
         .await
-        .context("subscribe")?
+        .context("subscribee issue")?
         .and_then(|msg| async move {
             serde_json::from_str::<Msg<M>>(&msg).context("deserialize message")
         });
+    
+    println!("Incoming");
 
     // Obtain party index
     let index = client.issue_index().await.context("issue an index")?;
@@ -90,12 +92,23 @@ impl SmClient {
         Ok(())
     }
 
+    pub async fn health_check(&self) -> Result<()> {
+        self.http_client
+            .get("health_check")
+            .await
+            .map_err(|e| e.into_inner())?;
+        Ok(())
+    }
+
     pub async fn subscribe(&self) -> Result<impl Stream<Item = Result<String>>> {
         let response = self
             .http_client
             .get("subscribe")
             .await
-            .map_err(|e| e.into_inner())?;
+            .map_err(|e| {
+                println!("Error while calling subscribe: {:?}", e);
+                e.into_inner()
+            })?;
 
         println!("Response: {:?}", response);
         let events = async_sse::decode(response);
