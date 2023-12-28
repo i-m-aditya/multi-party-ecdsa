@@ -101,6 +101,9 @@ impl SmClient {
     }
 
     pub async fn subscribe(&self) -> Result<impl Stream<Item = Result<String>>> {
+        
+        let url = self.http_client.config().base_url.clone().unwrap().join("subscribe").unwrap();
+        println!("URL: {:?}", url);
         let response = self
             .http_client
             .get("subscribe")
