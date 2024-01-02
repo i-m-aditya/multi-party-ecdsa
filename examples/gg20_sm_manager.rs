@@ -10,7 +10,7 @@ use rocket::http::Status;
 use rocket::request::{FromRequest, Outcome, Request};
 use rocket::response::stream::{stream, Event, EventStream};
 use rocket::serde::json::Json;
-use rocket::State;
+use rocket::{State, Config};
 use serde::{Deserialize, Serialize};
 use tokio::sync::{Notify, RwLock};
 
@@ -193,7 +193,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let figment = rocket::Config::figment().merge((
         "limits",
         rocket::data::Limits::new().limit("string", 100.megabytes()),
-    ));
+    )).merge((Config::PORT, 8000)).merge((Config::ADDRESS, "0.0.0.0"));
     println!("Hello: starting the server"); 
     rocket::custom(figment)
         .mount("/", rocket::routes![subscribe, issue_idx, broadcast, health_check])
