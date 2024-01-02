@@ -105,18 +105,18 @@ impl SmClient {
         let url = self.http_client.config().base_url.clone().unwrap().join("subscribe").unwrap();
         println!("URL: {:?}", url);
 
-        let response = self.http_client.get("http://13.126.104.0/rooms/default-keygen/subscribe").await.map_err(|e| {
-            println!("Error while calling subscribe: {:?}", e);
-            e.into_inner()
-        })?;
-        // let response = self
-        //     .http_client
-        //     .get("subscribe")
-        //     .await
-        //     .map_err(|e| {
-        //         println!("Error while calling subscribe: {:?}", e);
-        //         e.into_inner()
-        //     })?;
+        // let response = self.http_client.get("http://13.126.104.0/rooms/default-keygen/subscribe").await.map_err(|e| {
+        //     println!("Error while calling subscribe: {:?}", e);
+        //     e.into_inner()
+        // })?;
+        let response = self
+            .http_client
+            .get("subscribe")
+            .await
+            .map_err(|e| {
+                println!("Error while calling subscribe: {:?}", e);
+                e.into_inner()
+            })?;
 
         println!("Response: {:?}", response);
         let events = async_sse::decode(response);
