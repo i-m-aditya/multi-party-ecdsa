@@ -105,7 +105,7 @@ impl SmClient {
         let url = self.http_client.config().base_url.clone().unwrap().join("subscribe").unwrap();
         println!("URL: {:?}", url);
 
-        let response = self.http_client.get("http://15.207.222.9:8000/rooms/default-keygen/subscribe").await.map_err(|e| {
+        let response = self.http_client.get("http://13.126.104.0/rooms/default-keygen/subscribe").await.map_err(|e| {
             println!("Error while calling subscribe: {:?}", e);
             e.into_inner()
         })?;
