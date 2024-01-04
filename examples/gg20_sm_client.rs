@@ -48,6 +48,9 @@ where
     // Construct channel of outgoing messages
     let outgoing = futures::sink::unfold(client, |client, message: Msg<M>| async move {
         let serialized = serde_json::to_string(&message).context("serialize message")?;
+        println!("*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*");
+        println!("Serialized message: {:?}", serialized);
+        println!("*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*");
         client
             .broadcast(&serialized)
             .await
