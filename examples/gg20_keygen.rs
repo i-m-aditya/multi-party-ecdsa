@@ -1,7 +1,7 @@
 use anyhow::{anyhow, Context, Result};
 use curv::arithmetic::Converter;
 use futures::StreamExt;
-use std::path::PathBuf;
+use std::{ops::Deref, path::PathBuf};
 use structopt::StructOpt;
 
 use multi_party_ecdsa::protocols::multi_party_ecdsa::gg_2020::state_machine::keygen::Keygen;
@@ -80,6 +80,10 @@ async fn main() -> Result<()> {
     let y_in_bytes = uncompressed_public_key.y.to_bytes();
     println!("X uncompressed: {:?}", x_in_bytes);
     println!("Y uncompressed: {:?}", y_in_bytes);
+
+    let point_in_bytes = point.to_bytes(false);
+    let dum = point_in_bytes.deref();
+    println!("Point in bytes: {:?}", dum);
     // // // println!("Uncompressed:\n{:?}", uncompressed_public_key);
     // // println!("X uncompressed: {:?}", uncompressed_public_key.x);
     // // println!("Y uncompressed: {:?}", uncompressed_public_key.y);
