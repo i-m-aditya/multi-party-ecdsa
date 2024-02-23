@@ -32,7 +32,7 @@ where
         .and_then(|msg| async move {
             serde_json::from_str::<Msg<M>>(&msg).context("deserialize message")
         });
-    
+
     println!("Incoming");
 
     // Obtain party index
@@ -48,9 +48,9 @@ where
     // Construct channel of outgoing messages
     let outgoing = futures::sink::unfold(client, |client, message: Msg<M>| async move {
         let serialized = serde_json::to_string(&message).context("serialize message")?;
-        println!("*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*");
-        println!("Serialized message: {:?}", serialized);
-        println!("*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*");
+        // println!("*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*");
+        // println!("Serialized message: {:?}", serialized);
+        // println!("*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*\n*");
         client
             .broadcast(&serialized)
             .await
@@ -104,22 +104,24 @@ impl SmClient {
     }
 
     pub async fn subscribe(&self) -> Result<impl Stream<Item = Result<String>>> {
-        
-        let url = self.http_client.config().base_url.clone().unwrap().join("subscribe").unwrap();
+        let url = self
+            .http_client
+            .config()
+            .base_url
+            .clone()
+            .unwrap()
+            .join("subscribe")
+            .unwrap();
         println!("URL: {:?}", url);
 
         // let response = self.http_client.get("http://13.126.104.0/rooms/default-keygen/subscribe").await.map_err(|e| {
         //     println!("Error while calling subscribe: {:?}", e);
         //     e.into_inner()
         // })?;
-        let response = self
-            .http_client
-            .get("subscribe")
-            .await
-            .map_err(|e| {
-                println!("Error while calling subscribe: {:?}", e);
-                e.into_inner()
-            })?;
+        let response = self.http_client.get("subscribe").await.map_err(|e| {
+            println!("Error while calling subscribe: {:?}", e);
+            e.into_inner()
+        })?;
 
         println!("Response: {:?}", response);
         let events = async_sse::decode(response);

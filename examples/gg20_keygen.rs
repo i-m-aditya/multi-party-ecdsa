@@ -29,12 +29,17 @@ struct Cli {
 #[tokio::main]
 async fn main() -> Result<()> {
     let args: Cli = Cli::from_args();
+
+    println!("CLI args: {:?}", args);
     let mut output_file = tokio::fs::OpenOptions::new()
         .write(true)
         .create_new(true)
         .open(args.output)
         .await
         .context("cannot create output file")?;
+
+    println!("args address {:?}", args.address);
+    println!("args room {:?}", args.room);
 
     let (_i, incoming, outgoing) = join_computation(args.address, &args.room)
         .await
@@ -49,7 +54,33 @@ async fn main() -> Result<()> {
         .run()
         .await
         .map_err(|e| anyhow!("protocol execution terminated with error: {}", e))?;
+    // println!("Public key: {:?}", output.public_key());
+    let point = output.public_key();
+
+    println!("Point: \n {:?}", point);
+    let pk = point.into_raw().ge.unwrap();
+    let public_key = pk.0;
+
+    // let mut hasher = Sha224::keccak256
+
+    // println!("Public Key Compressed: ");
+    // println!("{:x}", public_key);
+
+    let uncompressed_public_key = public_key.serialize_uncompressed();
+    println!("Uncompressed:\n{:?}", uncompressed_public_key);
+
+    // let mut hasher = Keccak256::new();
+
+    // hasher.update(&uncompressed_public_key[1..]);
+    // let result = hasher.finalize();
+    // let ethereum_addy = &result[12..32];
+    // let ethereum_address = "0x".to_string() + hex::encode(ethereum_addy).as_str();
+
+    // println!("Ethereum address: {}", ethereum_address);
+
     let output = serde_json::to_vec_pretty(&output).context("serialize output")?;
+
+    // println!("Output as slice{:?}", output.as_slice());
     tokio::io::copy(&mut output.as_slice(), &mut output_file)
         .await
         .context("save output to file")?;
