@@ -1,4 +1,5 @@
 use anyhow::{anyhow, Context, Result};
+use curv::arithmetic::Converter;
 use futures::StreamExt;
 use std::path::PathBuf;
 use structopt::StructOpt;
@@ -74,11 +75,15 @@ async fn main() -> Result<()> {
     // let uncompressed_public_key = public_key.serialize_uncompressed();
     // println!("Uncompressed:\n{:?}", uncompressed_public_key);
 
-    let uncompressed_public_key = point.serialize_uncompressed();
-    // // println!("Uncompressed:\n{:?}", uncompressed_public_key);
-    // println!("X uncompressed: {:?}", uncompressed_public_key.x);
-    // println!("Y uncompressed: {:?}", uncompressed_public_key.y);
-    println!("Uncompressed Public Key: {:?}", uncompressed_public_key);
+    let uncompressed_public_key = point.coords().unwrap();
+    let x_in_bytes = uncompressed_public_key.x.to_bytes();
+    let y_in_bytes = uncompressed_public_key.y.to_bytes();
+    println!("X uncompressed: {:?}", x_in_bytes);
+    println!("Y uncompressed: {:?}", y_in_bytes);
+    // // // println!("Uncompressed:\n{:?}", uncompressed_public_key);
+    // // println!("X uncompressed: {:?}", uncompressed_public_key.x);
+    // // println!("Y uncompressed: {:?}", uncompressed_public_key.y);
+    // println!("Uncompressed Public Key: {:?}", uncompressed_public_key);
 
     // let mut hasher = Keccak256::new();
 
