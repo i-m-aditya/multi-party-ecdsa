@@ -74,10 +74,11 @@ async fn main() -> Result<()> {
     // let uncompressed_public_key = public_key.serialize_uncompressed();
     // println!("Uncompressed:\n{:?}", uncompressed_public_key);
 
-    let uncompressed_public_key = point.coords().unwrap();
-    // println!("Uncompressed:\n{:?}", uncompressed_public_key);
-    println!("X uncompressed: {:?}", uncompressed_public_key.x);
-    println!("Y uncompressed: {:?}", uncompressed_public_key.y);
+    let uncompressed_public_key = point.serialize_uncompressed();
+    // // println!("Uncompressed:\n{:?}", uncompressed_public_key);
+    // println!("X uncompressed: {:?}", uncompressed_public_key.x);
+    // println!("Y uncompressed: {:?}", uncompressed_public_key.y);
+    println!("Uncompressed Public Key: {:?}", uncompressed_public_key);
 
     // let mut hasher = Keccak256::new();
 
