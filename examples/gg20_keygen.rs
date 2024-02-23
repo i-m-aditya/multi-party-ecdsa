@@ -82,21 +82,21 @@ async fn main() -> Result<()> {
     // println!("Y uncompressed: {:?}", y_in_bytes);
 
     let encoded_point = point.to_bytes(false);
-    let public_key_uncompressed = encoded_point.deref();
-    println!("Public key uncompressed:\n{:?}", public_key_uncompressed);
+    let uncompressed_public_key = encoded_point.deref();
+    println!("Public key uncompressed:\n{:?}", uncompressed_public_key);
     // // // println!("Uncompressed:\n{:?}", uncompressed_public_key);
     // // println!("X uncompressed: {:?}", uncompressed_public_key.x);
     // // println!("Y uncompressed: {:?}", uncompressed_public_key.y);
     // println!("Uncompressed Public Key: {:?}", uncompressed_public_key);
 
-    // let mut hasher = Keccak256::new();
+    let mut hasher = Keccak256::new();
 
-    // hasher.update(&uncompressed_public_key[1..]);
-    // let result = hasher.finalize();
-    // let ethereum_addy = &result[12..32];
-    // let ethereum_address = "0x".to_string() + hex::encode(ethereum_addy).as_str();
+    hasher.update(&uncompressed_public_key[1..]);
+    let result = hasher.finalize();
+    let ethereum_addy = &result[12..32];
+    let ethereum_address = "0x".to_string() + hex::encode(ethereum_addy).as_str();
 
-    // println!("Ethereum address: {}", ethereum_address);
+    println!("Ethereum address: {}", ethereum_address);
 
     let output = serde_json::to_vec_pretty(&output).context("serialize output")?;
 
