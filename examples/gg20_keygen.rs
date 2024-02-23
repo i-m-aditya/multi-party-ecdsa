@@ -9,6 +9,11 @@ use round_based::async_runtime::AsyncProtocol;
 mod gg20_sm_client;
 use gg20_sm_client::join_computation;
 
+// use ethereum_types::{Address, H160};
+use secp256k1::{PublicKey, Secp256k1, VerifyOnly};
+
+use sha3::{Digest, Keccak256};
+
 #[derive(Debug, StructOpt)]
 struct Cli {
     #[structopt(short, long, default_value = "http://localhost:8000/")]
@@ -58,15 +63,18 @@ async fn main() -> Result<()> {
     let point = output.public_key();
 
     println!("Point: \n {:?}", point);
-    let pk = point.into_raw().ge.unwrap();
-    let public_key = pk.0;
+    // let pk = point.into_raw().ge.unwrap();
+    // let public_key = pk.0;
 
     // let mut hasher = Sha224::keccak256
 
     // println!("Public Key Compressed: ");
     // println!("{:x}", public_key);
 
-    let uncompressed_public_key = public_key.serialize_uncompressed();
+    // let uncompressed_public_key = public_key.serialize_uncompressed();
+    // println!("Uncompressed:\n{:?}", uncompressed_public_key);
+
+    let uncompressed_public_key = point.coords().unwrap();
     println!("Uncompressed:\n{:?}", uncompressed_public_key);
 
     // let mut hasher = Keccak256::new();
