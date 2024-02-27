@@ -77,6 +77,7 @@ async fn main() -> Result<()> {
 
     // To generate private key
 
+    println!("Hello");
     let data = hex::decode(&args.data_to_sign)?;
     println!("Args in u8: \n{:?}", data);
 
